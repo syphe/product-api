@@ -26,14 +26,8 @@ namespace ProductApi
         /// </summary>
         public void Run()
         {
-            _accountRepository.Insert(new Account
-            {
-                Id = Guid.NewGuid(),
-            });
-            _accountRepository.Insert(new Account
-            {
-                Id = Guid.NewGuid(),
-            });
+            _accountRepository.Insert(new Account("Acme Ltd"));
+            _accountRepository.Insert(new Account("Matchstick Company"));
         }
     }
 }

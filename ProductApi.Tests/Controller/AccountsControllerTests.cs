@@ -17,8 +17,8 @@ namespace ProductApi.Tests.Controller
         {
             var testAccounts = new List<Account>()
             {
-                new Account { Id = Guid.NewGuid() },
-                new Account { Id = Guid.NewGuid() }
+                new Account("Test Account #1"),
+                new Account("Test Account #2"),
             };
 
             var accountRepository = new Mock<IRepository<Account>>();

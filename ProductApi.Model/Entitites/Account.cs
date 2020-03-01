@@ -8,8 +8,17 @@ namespace ProductApi.Model.Entities
     /// </summary>
     public class Account : IEntity
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="Account"/>
+        /// </summary>
+        /// <param name="name">The Name of this Account.</param>
+        public Account(string name)
+        {
+            Name = name;
+        }
+
         /// <summary>Gets or sets the Id of this <see cref="Account"/></summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         /// <summary>Gets or sets the Name of this Account.</summary>
         public string Name { get; set; }

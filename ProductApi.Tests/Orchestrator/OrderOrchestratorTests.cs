@@ -20,16 +20,11 @@ namespace ProductApi.Tests.Orchestrator
             var mockOrderRepository = new Mock<IRepository<Order>>();
             mockOrderRepository.Setup(x => x.Insert(It.IsAny<Order>())).Callback<Order>(x => insertedOrder = x);
 
-            var account = new Account
-            {
-                Id = Guid.NewGuid(),
-            };
+            var account = new Account("Test Account");
 
-            var order = new Order
-            {
-                Id = Guid.NewGuid(),
-                AccountId = account.Id,
-            };
+            var product = new Product(account.Id, "Test Product", 15.0M);
+
+            var order = new Order(account.Id, product.Id, 1, 20.0M, "4 Other Street, Another Suburb, A City, That Country");
 
             var orderOrchestrator = new OrderOrchestrator();
             orderOrchestrator.CreateOrder(order);
@@ -42,22 +37,16 @@ namespace ProductApi.Tests.Orchestrator
         {
             var deliveryAddress = "5 Fake Street, Milford, Cork, Ireland";
 
-            var account = new Account
-            {
-                Id = Guid.NewGuid(),
-            };
+            var account = new Account("Test Account");
 
-            var product = new Product
-            {
-                Id = Guid.NewGuid(),
-            };
+            var product = new Product(account.Id, "Test Product", 15.0M);
 
             // Add some orders to the repository for the customer in which the total exceeds 100 euros.
             var orders = new List<Order>()
             {
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 50.0M },
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 50.0M },
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 25.0M },
+                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress),
             };
 
             // Assert that the total value exceeds 150 euro.
@@ -70,7 +59,7 @@ namespace ProductApi.Tests.Orchestrator
 
             Assert.Throws<CustomerHasOutstandingOrdersException>(() =>
             {
-                orderOrchestrator.CreateOrder(new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 25.0M });
+                orderOrchestrator.CreateOrder(new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress));
             });
         }
 
@@ -79,22 +68,16 @@ namespace ProductApi.Tests.Orchestrator
         {
             var deliveryAddress = "63 Transient Crescent, Whitegate, Cork, Ireland";
 
-            var account = new Account
-            {
-                Id = Guid.NewGuid(),
-            };
+            var account = new Account("Test Account");
 
-            var product = new Product
-            {
-                Id = Guid.NewGuid(),
-            };
+            var product = new Product(account.Id, "Test Product", 15.0M);
 
             // Add some orders to the repository for the customer in which the total quantity exceeds 10.
             var orders = new List<Order>()
             {
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 50.0M },
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 50.0M },
-                new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 25.0M },
+                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress),
             };
 
             // Just quickly assert that the order collection above has the right conditions.
@@ -107,31 +90,18 @@ namespace ProductApi.Tests.Orchestrator
 
             Assert.Throws<ProductBackOrderedException>(() =>
             {
-                orderOrchestrator.CreateOrder(new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 25.0M });
+                orderOrchestrator.CreateOrder(new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress));
             });
         }
 
         [Fact]
         public void Test_CreateOrder_WhenUnitPriceLowerThanCostPrice_ThrowsException()
         {
-            var account = new Account
-            {
-                Id = Guid.NewGuid(),
-            };
+            var account = new Account("Test Account");
 
-            var product = new Product
-            {
-                Id = Guid.NewGuid(),
-                CostPrice = 10.0M,
-            };
+            var product = new Product(account.Id, "Test Product", 10.0M);
 
-            var order = new Order
-            {
-                Id = Guid.NewGuid(),
-                AccountId = account.Id,
-                ProductId = product.Id,
-                UnitPrice = 8.0M
-            };
+            var order = new Order(account.Id, product.Id, 1, 8.0M, "65 Fake Street, Some Suburb, Some City, Some Country");
 
             Assert.True(order.UnitPrice < product.CostPrice);
 

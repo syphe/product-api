@@ -8,8 +8,25 @@ namespace ProductApi.Model.Entities
     /// </summary>
     public class Order : IEntity
     {
+        /// <summary>
+        /// Initializes a new instance of an <see cref="Order"/>
+        /// </summary>
+        /// <param name="accountId">The AccountId this Order belongs to.</param>
+        /// <param name="productId">The ProductId of the Product this Order is for.</param>
+        /// <param name="quantity">A value indicating the number of units ordered.</param>
+        /// <param name="unitPrice">A value indicating the Price per unit of the product ordered.</param>
+        /// <param name="deliveryAddress">The Address of the Customer whom this Order is for.</param>
+        public Order(Guid accountId, Guid productId, long quantity, decimal unitPrice, string deliveryAddress)
+        {
+            Id = Guid.NewGuid();
+            AccountId = accountId;
+            ProductId = productId;
+            UnitPrice = unitPrice;
+            DeliveryAddress = deliveryAddress;
+        }
+
         /// <inheritdoc/>
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
         /// <summary>Gets or sets the AccountId this Order belongs to.</summary>
         public Guid AccountId { get; set; }
