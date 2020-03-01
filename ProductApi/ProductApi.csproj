@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProductApi.DataAccess\ProductApi.DataAccess.csproj" />
+    <ProjectReference Include="..\ProductApi.Model\ProductApi.Model.csproj" />
   </ItemGroup>
 
 </Project>

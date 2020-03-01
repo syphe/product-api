@@ -1,6 +1,6 @@
 using System;
 using ProductApi.DataAccess;
-using ProductApi.DataAccess.Entities;
+using ProductApi.Model.Entities;
 
 namespace ProductApi
 {

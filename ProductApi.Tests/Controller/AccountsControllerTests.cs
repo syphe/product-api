@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ProductApi.Controllers;
 using ProductApi.DataAccess;
-using ProductApi.DataAccess.Entities;
+using ProductApi.Model.Entities;
 using Xunit;
 
 namespace ProductApi.Tests.Controller

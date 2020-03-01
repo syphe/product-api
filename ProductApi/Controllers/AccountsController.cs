@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProductApi.DataAccess;
-using ProductApi.DataAccess.Entities;
+using ProductApi.Model.Entities;
 
 namespace ProductApi.Controllers
 {

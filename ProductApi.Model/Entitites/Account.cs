@@ -1,6 +1,7 @@
 using System;
+using ProductApi.DataAccess;
 
-namespace ProductApi.DataAccess.Entities
+namespace ProductApi.Model.Entities
 {
     /// <summary>
     /// A customer's Account entity.
@@ -9,5 +10,8 @@ namespace ProductApi.DataAccess.Entities
     {
         /// <summary>Gets or sets the Id of this <see cref="Account"/></summary>
         public Guid Id { get; set; }
+
+        /// <summary>Gets or sets the Name of this Account.</summary>
+        public string Name { get; set; }
     }
 }
