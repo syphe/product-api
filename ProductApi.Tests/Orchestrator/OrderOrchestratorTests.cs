@@ -68,8 +68,6 @@ namespace ProductApi.Tests.Orchestrator
 
             var orderOrchestrator = new OrderOrchestrator();
 
-            Exception throwsException = null;
-
             Assert.Throws<CustomerHasOutstandingOrdersException>(() =>
             {
                 orderOrchestrator.CreateOrder(new Order { Id = Guid.NewGuid(), DeliveryAddress = deliveryAddress, AccountId = account.Id, ProductId = product.Id, Quantity = 1, UnitPrice = 25.0M });
@@ -113,6 +111,7 @@ namespace ProductApi.Tests.Orchestrator
             });
         }
 
+        [Fact]
         public void Test_CreateOrder_WhenUnitPriceLowerThanCostPrice_ThrowsException()
         {
             var account = new Account
@@ -137,8 +136,6 @@ namespace ProductApi.Tests.Orchestrator
             Assert.True(order.UnitPrice < product.CostPrice);
 
             var orderOrchestrator = new OrderOrchestrator();
-
-            Exception throwsException = null;
 
             Assert.Throws<SalePriceLowerThanCostPriceException>(() =>
             {
