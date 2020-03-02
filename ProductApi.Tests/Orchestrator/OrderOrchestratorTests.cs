@@ -14,18 +14,21 @@ namespace ProductApi.Tests.Orchestrator
         [Fact]
         public void Test_CreateOrder_WithValidOrder_OrderInsertedIntoRepository()
         {
-            var mockOrderRepository = new Mock<IRepository<Order>>();
-            var mockProductRepository = new Mock<IRepository<Product>>();
+            // Setup the test data.
+            var account = new Account("Test Account");
+            var product = new Product(account.Id, "Test Product", 15.0M);
 
+            // Setup the Mock Objects.
+            var mockOrderRepository = new Mock<IRepository<Order>>();
             Order insertedOrder = null;
             mockOrderRepository.Setup(x => x.Insert(It.IsAny<Order>())).Callback<Order>(x => insertedOrder = x);
 
-            var account = new Account("Test Account");
-
-            var product = new Product(account.Id, "Test Product", 15.0M);
+            var mockProductRepository = new Mock<IRepository<Product>>();
+            mockProductRepository.Setup(x => x.GetById(product.Id)).Returns(product);
 
             var order = new Order(account.Id, product.Id, 1, 20.0M, "4 Other Street, Another Suburb, A City, That Country");
 
+            // Setup the object to test.
             var orderOrchestrator = new OrderOrchestrator(mockOrderRepository.Object, mockProductRepository.Object);
             orderOrchestrator.CreateOrder(order);
 

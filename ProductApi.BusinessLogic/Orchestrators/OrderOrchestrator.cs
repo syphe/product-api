@@ -55,6 +55,8 @@ namespace ProductApi.BusinessLogic.Orchestrators
             {
                 throw new ProductBackOrderedException();
             }
+
+            _orderRepository.Insert(order);
         }
     }
 }
