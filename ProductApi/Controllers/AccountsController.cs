@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using ProductApi.BusinessLogic.Orchestrators;
 using ProductApi.DataAccess;
 using ProductApi.Model.Entities;
 
@@ -14,15 +15,15 @@ namespace ProductApi.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly IRepository<Account> _accountRepository;
+        private readonly IAccountOrchestrator _accountOrchestrator;
 
         /// <summary>
         /// Initializes a new instance of the AccountsController class.
         /// </summary>
-        /// <param name="accountRepository">The <see cref="IRepository{T}"/> instance for Accounts.</param>
-        public AccountsController(IRepository<Account> accountRepository)
+        /// <param name="accountOrchestrator"></param>
+        public AccountsController(IAccountOrchestrator accountOrchestrator)
         {
-            _accountRepository = accountRepository;
+            _accountOrchestrator = accountOrchestrator;
         }
         
         /// <summary>
@@ -32,7 +33,7 @@ namespace ProductApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Account>> GetAll()
         {
-            var accounts = _accountRepository.GetAll().AsEnumerable();
+            var accounts = _accountOrchestrator.GetAll();
             return Ok(accounts);
         }
 
@@ -44,7 +45,7 @@ namespace ProductApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(Guid id)
         {
-            var account = _accountRepository.GetById(id);
+            var account = _accountOrchestrator.GetById(id);
 
             if (account == null)
             {
@@ -68,12 +69,15 @@ namespace ProductApi.Controllers
                 return BadRequest("Id does not match the Account passed in.");
             }
 
-            if (_accountRepository.Insert(account))
+            try
             {
+                _accountOrchestrator.CreateAccount(account);
                 return Ok();
             }
-
-            return BadRequest();
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -84,12 +88,15 @@ namespace ProductApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
-            if (_accountRepository.Delete(id))
+            try
             {
+                _accountOrchestrator.DeleteAccount(id);
                 return Ok();
             }
-
-            return BadRequest();
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

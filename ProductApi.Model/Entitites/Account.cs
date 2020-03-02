@@ -12,9 +12,9 @@ namespace ProductApi.Model.Entities
         /// Initializes a new instance of <see cref="Account"/>
         /// </summary>
         /// <param name="name">The Name of this Account.</param>
-        public Account(string name)
+        public Account(string name, Guid? id = null)
         {
-            Id = Guid.NewGuid();
+            Id = id ?? Guid.NewGuid();
             Name = name;
         }
 

@@ -1,4 +1,6 @@
-﻿using ProductApi.Model.Entities;
+﻿using System;
+using System.Collections.Generic;
+using ProductApi.Model.Entities;
 
 namespace ProductApi.BusinessLogic.Orchestrators
 {
@@ -12,5 +14,9 @@ namespace ProductApi.BusinessLogic.Orchestrators
         /// </summary>
         /// <param name="order">The Order to create, if the order is valid, nothing is returned, otherwise an Exception is thrown.</param>
         void CreateOrder(Order order);
+
+        IEnumerable<Order> GetAll(Guid accountId);
+
+        Order GetById(Guid accountId, Guid id);
     }
 }

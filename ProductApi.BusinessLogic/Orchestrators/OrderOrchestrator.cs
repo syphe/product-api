@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using ProductApi.DataAccess;
 using ProductApi.Model.Entities;
@@ -27,8 +29,9 @@ namespace ProductApi.BusinessLogic.Orchestrators
         /// <inheritdoc/>
         public void CreateOrder(Order order)
         {
+            // Product is not found if the id doesn't exist, or if the product exists for a different account.
             var product = _productRepository.GetById(order.ProductId);
-            if (product == null)
+            if (product == null || product.AccountId != order.AccountId)
             {
                 throw new ProductNotFoundException(order.ProductId);
             }
@@ -39,7 +42,7 @@ namespace ProductApi.BusinessLogic.Orchestrators
             }
 
             var outstandingOrdersValue = _orderRepository.GetAll()
-                .Where(x => !x.Paid && x.DeliveryAddress == order.DeliveryAddress)
+                .Where(x => x.AccountId == order.AccountId && !x.Paid && x.DeliveryAddress == order.DeliveryAddress)
                 .Sum(x => x.Quantity * x.UnitPrice);
 
             if (outstandingOrdersValue > OutstandingOrderMaxValue)
@@ -48,7 +51,7 @@ namespace ProductApi.BusinessLogic.Orchestrators
             }
 
             var numBackOrdered = _orderRepository.GetAll()
-                .Where(x => x.ProductId == order.ProductId && !x.Complete)
+                .Where(x => x.AccountId == order.AccountId && x.ProductId == order.ProductId && !x.Complete)
                 .Sum(x => x.Quantity);
 
             if (numBackOrdered > BackOrderLimit)
@@ -57,6 +60,24 @@ namespace ProductApi.BusinessLogic.Orchestrators
             }
 
             _orderRepository.Insert(order);
+        }
+
+        public IEnumerable<Order> GetAll(Guid accountId)
+        {
+            var orders = _orderRepository.GetAll().Where(x => x.AccountId == accountId);
+            return orders;
+        }
+
+        public Order GetById(Guid accountId, Guid id)
+        {
+            var order = _orderRepository.GetById(id);
+
+            if (order.AccountId != accountId)
+            {
+                return null;
+            }
+
+            return order;
         }
     }
 }

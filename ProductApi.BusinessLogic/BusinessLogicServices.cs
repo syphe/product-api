@@ -12,9 +12,11 @@ namespace ProductApi.BusinessLogic
         /// Adds the required Business Logic services into the DI container specified.
         /// </summary>
         /// <param name="services"></param>
-        public static void ConfigureBusinessLogicServices(IServiceCollection services)
+        public static void ConfigureBusinessLogicServices(this IServiceCollection services)
         {
+            services.AddTransient<IAccountOrchestrator, AccountOrchestrator>();
             services.AddTransient<IOrderOrchestrator, OrderOrchestrator>();
+            services.AddTransient<IProductOrchestrator, ProductOrchestrator>();
         }
     }
 }

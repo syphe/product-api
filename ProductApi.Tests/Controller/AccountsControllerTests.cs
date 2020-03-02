@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using ProductApi.BusinessLogic.Orchestrators;
 using ProductApi.Controllers;
 using ProductApi.DataAccess;
 using ProductApi.Model.Entities;
@@ -21,10 +22,10 @@ namespace ProductApi.Tests.Controller
                 new Account("Test Account #2"),
             };
 
-            var accountRepository = new Mock<IRepository<Account>>();
-            accountRepository.Setup(x => x.GetAll()).Returns(testAccounts.AsQueryable());
+            var accountOrchestrator = new Mock<IAccountOrchestrator>();
+            accountOrchestrator.Setup(x => x.GetAll()).Returns(testAccounts);
 
-            var accountsController = new AccountsController(accountRepository.Object);
+            var accountsController = new AccountsController(accountOrchestrator.Object);
 
             var result = accountsController.GetAll();
 

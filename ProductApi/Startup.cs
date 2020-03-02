@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ProductApi.BusinessLogic;
 using ProductApi.DataAccess;
 
 namespace ProductApi
@@ -30,6 +31,7 @@ namespace ProductApi
 
             // Add all our application registrations here using extension methods.
             services.ConfigureDataAccessServices();
+            services.ConfigureBusinessLogicServices();
 
             services.AddTransient<SetupTestData>();
         }
