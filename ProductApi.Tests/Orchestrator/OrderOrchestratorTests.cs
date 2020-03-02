@@ -70,30 +70,31 @@ namespace ProductApi.Tests.Orchestrator
         [Fact]
         public void Test_CreateOrder_WhenProductAlreadyBackOrdered_ThrowsException()
         {
-            var mockOrderRepository = new Mock<IRepository<Order>>();
-            var mockProductRepository = new Mock<IRepository<Product>>();
-
+            // Setup the test data.
             var deliveryAddress = "63 Transient Crescent, Whitegate, Cork, Ireland";
-
             var account = new Account("Test Account");
-
-            var product = new Product(account.Id, "Test Product", 15.0M);
+            var product = new Product(account.Id, "Test Product", 2.0M);
 
             // Add some orders to the repository for the customer in which the total quantity exceeds 10.
             var orders = new List<Order>()
             {
-                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
-                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
-                new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 4, 5.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 5, 6.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 2, 3.0M, deliveryAddress),
             };
+
+            // Setup the Mock Objects.
+            var mockOrderRepository = new Mock<IRepository<Order>>();
+            mockOrderRepository.Setup(x => x.GetAll()).Returns(() => orders.AsQueryable());
+
+            var mockProductRepository = new Mock<IRepository<Product>>();
+            mockProductRepository.Setup(x => x.GetById(product.Id)).Returns(product);
+
+            // Setup the object to test.
+            var orderOrchestrator = new OrderOrchestrator(mockOrderRepository.Object, mockProductRepository.Object);
 
             // Just quickly assert that the order collection above has the right conditions.
             Assert.True(orders.Sum(x => x.Quantity) > 10);
-            
-            mockOrderRepository.Setup(x => x.GetAll()).Returns(() => orders.AsQueryable());
-
-            var orderOrchestrator = new OrderOrchestrator(mockOrderRepository.Object, mockProductRepository.Object);
-
             Assert.Throws<ProductBackOrderedException>(() =>
             {
                 orderOrchestrator.CreateOrder(new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress));

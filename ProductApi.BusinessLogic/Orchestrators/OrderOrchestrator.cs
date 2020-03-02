@@ -12,6 +12,7 @@ namespace ProductApi.BusinessLogic.Orchestrators
     public class OrderOrchestrator : IOrderOrchestrator
     {
         private const decimal OutstandingOrderMaxValue = 150.0M;
+        private const int BackOrderLimit = 10;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Product> _productRepository;
 
@@ -38,10 +39,21 @@ namespace ProductApi.BusinessLogic.Orchestrators
             }
 
             var outstandingOrdersValue = _orderRepository.GetAll()
-                .Where(x => !x.Paid && x.DeliveryAddress == order.DeliveryAddress).Sum(x => x.Quantity * x.UnitPrice);
+                .Where(x => !x.Paid && x.DeliveryAddress == order.DeliveryAddress)
+                .Sum(x => x.Quantity * x.UnitPrice);
+
             if (outstandingOrdersValue > OutstandingOrderMaxValue)
             {
                 throw new CustomerHasOutstandingOrdersException(OutstandingOrderMaxValue);
+            }
+
+            var numBackOrdered = _orderRepository.GetAll()
+                .Where(x => x.ProductId == order.ProductId && !x.Complete)
+                .Sum(x => x.Quantity);
+
+            if (numBackOrdered > BackOrderLimit)
+            {
+                throw new ProductBackOrderedException();
             }
         }
     }

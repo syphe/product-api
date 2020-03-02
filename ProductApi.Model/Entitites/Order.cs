@@ -46,5 +46,8 @@ namespace ProductApi.Model.Entities
 
         /// <summary>Gets or sets a value indicating whether the Customer has paid for this order or not.</summary>
         public bool Paid { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether the Order has been completed or not.</summary>
+        public bool Complete { get; set; }
     }
 }
