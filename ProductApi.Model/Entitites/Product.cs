@@ -16,6 +16,7 @@ namespace ProductApi.Model.Entities
         /// <param name="costPrice">A value indicating the Cost Price to the Business for this Product.</param>
         public Product(Guid accountId, string name, decimal costPrice)
         {
+            Id = Guid.NewGuid();
             AccountId = accountId;
             Name = name;
             CostPrice = costPrice;

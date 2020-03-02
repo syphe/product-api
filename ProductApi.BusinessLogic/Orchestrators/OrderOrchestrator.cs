@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ProductApi.DataAccess;
 using ProductApi.Model.Entities;
 using ProductApi.Model.Exceptions;
@@ -10,6 +11,7 @@ namespace ProductApi.BusinessLogic.Orchestrators
     /// </summary>
     public class OrderOrchestrator : IOrderOrchestrator
     {
+        private const decimal OutstandingOrderMaxValue = 150.0M;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Product> _productRepository;
 
@@ -33,6 +35,13 @@ namespace ProductApi.BusinessLogic.Orchestrators
             if (order.UnitPrice < product.CostPrice)
             {
                 throw new SalePriceLowerThanCostPriceException(order.UnitPrice, product.CostPrice);
+            }
+
+            var outstandingOrdersValue = _orderRepository.GetAll()
+                .Where(x => !x.Paid && x.DeliveryAddress == order.DeliveryAddress).Sum(x => x.Quantity * x.UnitPrice);
+            if (outstandingOrdersValue > OutstandingOrderMaxValue)
+            {
+                throw new CustomerHasOutstandingOrdersException(OutstandingOrderMaxValue);
             }
         }
     }

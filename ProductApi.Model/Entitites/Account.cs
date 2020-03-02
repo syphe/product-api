@@ -14,6 +14,7 @@ namespace ProductApi.Model.Entities
         /// <param name="name">The Name of this Account.</param>
         public Account(string name)
         {
+            Id = Guid.NewGuid();
             Name = name;
         }
 

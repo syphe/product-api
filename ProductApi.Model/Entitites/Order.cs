@@ -21,6 +21,7 @@ namespace ProductApi.Model.Entities
             Id = Guid.NewGuid();
             AccountId = accountId;
             ProductId = productId;
+            Quantity = quantity;
             UnitPrice = unitPrice;
             DeliveryAddress = deliveryAddress;
         }
@@ -42,5 +43,8 @@ namespace ProductApi.Model.Entities
 
         /// <summary>Gets or sets the Address of the Customer whom this Order is for.</summary>
         public string DeliveryAddress { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether the Customer has paid for this order or not.</summary>
+        public bool Paid { get; set; }
     }
 }

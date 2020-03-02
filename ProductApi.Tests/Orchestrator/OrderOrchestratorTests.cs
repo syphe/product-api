@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Moq;
 using ProductApi.BusinessLogic.Orchestrators;
 using ProductApi.DataAccess;
@@ -35,31 +33,33 @@ namespace ProductApi.Tests.Orchestrator
         }
 
         [Fact]
-        public void Test_CreateOrder_WhenCustomerHasOutstandingOrders_ThrowsException()
+        public void Test_CreateOrder_WhenCustomerHasOutstandingOrdersExceeding150Euro_ThrowsException()
         {
-            var mockOrderRepository = new Mock<IRepository<Order>>();
-            var mockProductRepository = new Mock<IRepository<Product>>();
-
+            // Setup the test data.
             var deliveryAddress = "5 Fake Street, Milford, Cork, Ireland";
-
             var account = new Account("Test Account");
-
             var product = new Product(account.Id, "Test Product", 15.0M);
-
+            
             // Add some orders to the repository for the customer in which the total exceeds 100 euros.
             var orders = new List<Order>()
             {
                 new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
-                new Order(account.Id, product.Id, 1, 50.0M, deliveryAddress),
+                new Order(account.Id, product.Id, 2, 50.0M, deliveryAddress),
                 new Order(account.Id, product.Id, 1, 25.0M, deliveryAddress),
             };
 
-            // Assert that the total value exceeds 150 euro.
-            Assert.True(orders.Sum(x => x.Quantity * x.UnitPrice) > 150.0M);
-
+            // Setup the Mock Objects.
+            var mockOrderRepository = new Mock<IRepository<Order>>();
             mockOrderRepository.Setup(x => x.GetAll()).Returns(() => orders.AsQueryable());
 
+            var mockProductRepository = new Mock<IRepository<Product>>();
+            mockProductRepository.Setup(x => x.GetById(product.Id)).Returns(product);
+
+            // Setup the object to test.
             var orderOrchestrator = new OrderOrchestrator(mockOrderRepository.Object, mockProductRepository.Object);
+
+            // Assert that the total value of Orders exceeds 150 euro.
+            Assert.True(orders.Sum(x => x.Quantity * x.UnitPrice) > 150.0M);
 
             Assert.Throws<CustomerHasOutstandingOrdersException>(() =>
             {
