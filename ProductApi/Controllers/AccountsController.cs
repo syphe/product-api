@@ -56,23 +56,17 @@ namespace ProductApi.Controllers
         }
 
         /// <summary>
-        /// Inserts an Account into the system with the specified Id.
+        /// Inserts a new Account into the system.
         /// </summary>
-        /// <param name="id">The Id of the Account to add.</param>
         /// <param name="account">The Account to add.</param>
-        /// <returns>An Http Ok if the insert was successful, BadRequest otherwise.</returns>
-        [HttpPut("{id}")]
-        public ActionResult Put(Guid id, [FromBody] Account account)
+        /// <returns>An Http Ok if the insert was successful, with the Id of the Account as the Body, BadRequest otherwise.</returns>
+        [HttpPost]
+        public ActionResult<Account> CreateAccount([FromBody] Account account)
         {
-            if (id != account.Id)
-            {
-                return BadRequest("Id does not match the Account passed in.");
-            }
-
             try
             {
                 _accountOrchestrator.CreateAccount(account);
-                return Ok();
+                return Ok(account);
             }
             catch (Exception ex)
             {

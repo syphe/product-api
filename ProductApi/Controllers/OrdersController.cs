@@ -38,7 +38,7 @@ namespace ProductApi.Controllers
         }
 
         [HttpPost("accounts/{accountId}/orders")]
-        public ActionResult<Guid> CreateOrder(Guid accountId, [FromBody]Order order)
+        public ActionResult<Order> CreateOrder(Guid accountId, [FromBody]Order order)
         {
             if (accountId != order.AccountId)
             {
@@ -48,7 +48,7 @@ namespace ProductApi.Controllers
             try
             {
                 _orderOrchestrator.CreateOrder(order);
-                return Ok(order.Id);
+                return Ok(order);
             }
             catch (Exception ex)
             {
