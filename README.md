@@ -6,7 +6,7 @@ This is a test project written as a coding challenge for a job opportunity.
 # Design Notes
 I completed the task by writing an API using ASP.NET Core Web Api project type (dotnet new webapi).
 
-The solution is multi-tenanted seperating out Products and Orders for different Accounts. In reality, a lot more care would be required to ensure data segregation between Accounts, as well as authentication and permissions (User should require Key's/Secret's in order to query/modify data within their own dataset).
+The solution is multi-tenanted by seperating out Products and Orders for different Accounts. In reality, a lot more care would be required to ensure data segregation between Accounts, as well as authentication and permissions (User should require Key's/Secret's in order to query/modify data within their own dataset).
 
 The ProductApi project is the entry point in the application, and contains just the ASP.NET Controllers exposed by the API, all logic that is concerned with these Controllers and what they return is emcompassed within the ProductApi project.
 
