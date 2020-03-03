@@ -43,6 +43,8 @@ The project may be run on premise as a regular .NET core application, but is als
 # Usage
 The API is fairly bare-bones, with the operations listed below.
 
+Note: Some Accounts and Products are created by default as test data when the app starts, for ease of use, the Id's of these objects will not change, so you can test creation of Orders between application closures without having to change the Id references.
+
 ### GET /api/accounts
 Gets all the Accounts in the system.
 
