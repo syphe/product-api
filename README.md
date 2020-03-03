@@ -22,7 +22,7 @@ dotnet test ProductApi.Tests
 ```
 
 # Coding Style
-I have used coding style guidelines I have mostly been adhering to over my career, which should be fairly familiar to most C# developers. I have tried to comment most publicly exposed classes/interfaces using /// summaries, using <inheritdoc/> in place of implemented methods.
+I have used coding style guidelines I have mostly been adhering to over my career, which should be fairly familiar to most C# developers. I have tried to comment most publicly exposed classes/interfaces using /// summaries, using ```<inheritdoc/>``` in place of implemented methods.
 
 # Deployment Notes
 The project may be run on premise as a regular .NET core application, but is also ready to be deployed to the Cloud, for example to AWS Elastic Beanstalk, to do so, follow the steps below:
@@ -38,6 +38,7 @@ The project may be run on premise as a regular .NET core application, but is als
 9. Choose a name for the environment, Url, then click Next.
 10. Complete the rest of the Wizard with your own choices.
 11. Once finished, a new tab will appear showing live updates while creating the new Environment, wait for this to complete (will take a number of minutes).
+12. You will be given a Url for access to the newly created api, simply browsing to the routes defined below will give you appropriate results.
 
 # Usage
 The API is fairly bare-bones, with the operations listed below.
