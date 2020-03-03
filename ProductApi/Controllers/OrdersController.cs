@@ -6,17 +6,29 @@ using ProductApi.Model.Entities;
 
 namespace ProductApi.Controllers
 {
+    /// <summary>
+    /// Controller for operations relating to customer Orders.
+    /// </summary>
     [Route("api")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderOrchestrator _orderOrchestrator;
 
+        /// <summary>
+        /// Initializes a new instance of the OrdersController class.
+        /// </summary>
+        /// <param name="orderOrchestrator">The <see cref="IOrderOrchestrator"/> required for operations.</param>
         public OrdersController(IOrderOrchestrator orderOrchestrator)
         {
             _orderOrchestrator = orderOrchestrator;
         }
 
+        /// <summary>
+        /// Gets all the Orders for a given Account.
+        /// </summary>
+        /// <param name="accountId">The Id of the Account to retrieve Orders for.</param>
+        /// <returns>The collection of Orders which belong to this Account.</returns>
         [HttpGet("accounts/{accountId}/orders")]
         public ActionResult<IEnumerable<Order>> GetAll(Guid accountId)
         {
@@ -24,6 +36,12 @@ namespace ProductApi.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Gets a single Order given an AccountId and OrderId.
+        /// </summary>
+        /// <param name="accountId">The AccountId the Order belongs to.</param>
+        /// <param name="id">The Id of the Order to retrieve.</param>
+        /// <returns>The Order requested.</returns>
         [HttpGet("accounts/{accountId}/orders/{id}")]
         public ActionResult<Order> GetById(Guid accountId, Guid id)
         {
@@ -37,6 +55,12 @@ namespace ProductApi.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Creates an Order for the given Account.
+        /// </summary>
+        /// <param name="accountId">The AccountId the Order should belong to.</param>
+        /// <param name="order">The Order to create.</param>
+        /// <returns>The created Order, with id's and other properties filled in.</returns>
         [HttpPost("accounts/{accountId}/orders")]
         public ActionResult<Order> CreateOrder(Guid accountId, [FromBody]Order order)
         {

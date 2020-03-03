@@ -62,12 +62,14 @@ namespace ProductApi.BusinessLogic.Orchestrators
             _orderRepository.Insert(order);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Order> GetAll(Guid accountId)
         {
             var orders = _orderRepository.GetAll().Where(x => x.AccountId == accountId);
             return orders;
         }
 
+        /// <inheritdoc/>
         public Order GetById(Guid accountId, Guid id)
         {
             var order = _orderRepository.GetById(id);

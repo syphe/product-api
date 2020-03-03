@@ -20,7 +20,7 @@ namespace ProductApi.Controllers
         /// <summary>
         /// Initializes a new instance of the AccountsController class.
         /// </summary>
-        /// <param name="accountOrchestrator"></param>
+        /// <param name="accountOrchestrator">The <see cref="IAccountOrchestrator"/> required for performing operations.</param>
         public AccountsController(IAccountOrchestrator accountOrchestrator)
         {
             _accountOrchestrator = accountOrchestrator;
@@ -43,7 +43,7 @@ namespace ProductApi.Controllers
         /// <param name="id">The Id of an Account to retrieve.</param>
         /// <returns>An Account with the specified Id.</returns>
         [HttpGet("{id}")]
-        public ActionResult<string> Get(Guid id)
+        public ActionResult<Account> Get(Guid id)
         {
             var account = _accountOrchestrator.GetById(id);
 
@@ -59,7 +59,7 @@ namespace ProductApi.Controllers
         /// Inserts a new Account into the system.
         /// </summary>
         /// <param name="account">The Account to add.</param>
-        /// <returns>An Http Ok if the insert was successful, with the Id of the Account as the Body, BadRequest otherwise.</returns>
+        /// <returns>The resulting Account object if successful, BadRequest otherwise.</returns>
         [HttpPost]
         public ActionResult<Account> CreateAccount([FromBody] Account account)
         {
